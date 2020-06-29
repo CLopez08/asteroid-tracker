@@ -1,0 +1,68 @@
+<%- include("partials/header") %>
+
+
+	<div class="home">
+		
+		<%if(apodData.media_type == "image"){%>
+			<a id="picLink" href="#apod">
+				<img src="<%=apodData.url%>" class="img-fluid" alt="apod">
+			</a>
+		<%}%>
+		
+		<div class="title">
+			<h1>Asteroid Tracker</h1>
+			<h3><a href="#astTable" id="todayLink">Start Tracking</a></h3>
+		</div>
+	</div>
+
+	<div id="astTable" class="container">
+
+		<h1>Closest Asteroids To Earth<br> 
+			<small class="text-muted">On <%=today%></small>
+		</h1>
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Asteroid Name</th>
+						<th>Relative Velocity (mph)</th>
+						<th>Estimated Diameter (ft)</th>
+						<th>Miss Distance (m)</th>
+						<th><a href="https://en.wikipedia.org/wiki/Potentially_hazardous_object">Potentially Hazardous?</a></th>
+					</tr>
+				</thead>
+				<%asteroidData["near_earth_objects"][today].forEach(function(rock){ %>
+					<tr>
+						<td class="astName"><%= rock["name"] %></td> 
+						<td class="relVel"><%= parseInt(rock["close_approach_data"][0]["relative_velocity"]["miles_per_hour"]).toLocaleString('en') %></td>
+						<td class="diameter"><%= parseInt(rock["estimated_diameter"]["feet"]["estimated_diameter_max"]).toLocaleString('en') %></td> 
+						<td><%= parseInt(rock["close_approach_data"][0]["miss_distance"]["miles"]).toLocaleString('en') %></td>
+						<td class="haz"><%= isHaz(rock["is_potentially_hazardous_asteroid"])%></td>
+					</tr>
+				<% }) %>
+			</table>
+
+		<hr>
+
+		<div class="container">
+			<div id="chartContainer"></div>
+		</div>	
+
+		<hr>
+
+		<div id="apod" class="media">
+			<div class="media_body">
+				<h3 class="mt-0 mb-1"><%=apodData.title%></h3>
+				<%=apodData.explanation%>
+			</div>
+			<figure>
+				<img src="<%=apodData.url%>" class="ml-3" alt="apod">
+				<figcaption>Copyright: <%=apodData.copyright%></figcaption>
+			</figure>	
+		</div>
+
+	</div>
+
+</div>
+
+<%- include("partials/footer") %>
